@@ -10,8 +10,8 @@ import { getSearchResultsPage } from './model.js';
 import paginationView from './views/paginationView.js';
 import addRecipeView from './views/addRecipeView.js';
 import { updateServings } from './model.js';
-import bookmarkView from './views/bookmarkView.js';
-import {  MODAL_CLOSE } from './config.js';
+import bookmarkView from './views/bookMarkView.js';
+import { MODAL_CLOSE } from './config.js';
 
 //Selecting html elements...!
 const recipeContainer = document.querySelector('.recipe');
@@ -59,47 +59,39 @@ const controlRecipe = async function () {
 
     //Updating Bookmarks...!
     bookmarkView.update(model.state.bookmarks);
-
   } catch (err) {
     viewRecipe.renderError();
   }
 };
 
-const controlAddRecipe=async function(newRecipe){
-try{
+const controlAddRecipe = async function (newRecipe) {
+  try {
+    //Rendering the spinner
+    addRecipeView.renderSpinner();
 
-//Rendering the spinner
-addRecipeView.renderSpinner();
+    //Uploading Recipe
+    await model.uploadRecipe(newRecipe);
 
-//Uploading Recipe
-await model.uploadRecipe(newRecipe);
+    //Rendering the uploaded recipe...!
+    viewRecipe.render(model.state.recipe);
 
-//Rendering the uploaded recipe...!
-viewRecipe.render(model.state.recipe);
+    //Success Message
+    addRecipeView.renderMessage();
 
-//Success Message
-addRecipeView.renderMessage();
+    //ReRendering the bookmarks....!
+    bookmarkView.render(model.state.bookmarks);
 
-//ReRendering the bookmarks....!
-bookmarkView.render(model.state.bookmarks);
+    //Changing the url of the browser to the newely uploaded recipe
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
 
-//Changing the url of the browser to the newely uploaded recipe
-window.history.pushState(null,'',`#${model.state.recipe.id}`);
-
-
-setTimeout(() => {
-  //Removing the modal open window
-addRecipeView._toggleWindow();
-
-
-
-}, MODAL_CLOSE);
-
-
-
-}catch(err){
-  addRecipeView.renderError(err);
-}}
+    setTimeout(() => {
+      //Removing the modal open window
+      addRecipeView._toggleWindow();
+    }, MODAL_CLOSE);
+  } catch (err) {
+    addRecipeView.renderError(err);
+  }
+};
 
 const controlSearchResults = async function (query) {
   try {
@@ -114,9 +106,9 @@ const controlSearchResults = async function (query) {
   }
 };
 
-const controlBookmarkRenderHandler=function(){
+const controlBookmarkRenderHandler = function () {
   bookmarkView.render(model.state.bookmarks);
-}
+};
 const controlPagination = function (goToPage) {
   resultsView.render(getSearchResultsPage(goToPage));
   paginationView.render(model.state.search);

@@ -1,0 +1,21 @@
+{
+  "name": "forkify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build --no-minify index.html"
+  },
+  "author": "Pratham Pancholi",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5"
+  },
+  "dependencies": {
+    "core-js": "^3.14.0",
+    "fractional": "^1.0.0",
+    "regenerator-runtime": "^0.13.7",
+    "sass": "^1.35.1"
+  }
+}
